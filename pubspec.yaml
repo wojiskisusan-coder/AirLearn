@@ -1,0 +1,41 @@
+name: airlearn_ai
+description: AirLearn AI - Bangladesh's first free, open-source AI-powered learning platform.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Typography - beautiful fonts
+  google_fonts: ^6.1.0
+
+  # UI & Material Design
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Code analysis and formatting
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Assets folder (if needed)
+  # assets:
+  #   - assets/images/
+  #   - assets/icons/
+
+  # Custom fonts
+  fonts:
+    - family: GoogleSans
+      fonts:
+        - asset: fonts/GoogleSans-Regular.ttf
+        - asset: fonts/GoogleSans-Bold.ttf
+          weight: 700
