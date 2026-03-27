@@ -1,0 +1,70 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          cache: gradle
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
+          channel: 'stable'
+          cache: true
+      
+      - name: Get Dependencies
+        run: flutter pub get
+      
+      - name: Build APK
+        run: flutter build apk --release
+      
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: airlearn-apk
+          path: build/app/outputs/flutter-app.apk
+          retention-days: 30
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: success()
+        with:
+          files: build/app/outputs/flutter-app.apk
+          tag_name: v1.0.0-build-${{ github.run_number }}
+          release_name: AirLearn AI Build ${{ github.run_number }}
+          body: |
+            ✅ Automated APK Build Successful
+            
+            **Build Number:** ${{ github.run_number }}
+            **Branch:** ${{ github.ref_name }}
+            **Commit:** ${{ github.sha }}
+            
+            Download the APK file below and install on your Android device.
+            
+            **How to Install:**
+            1. Download airlearn-apk.apk
+            2. Transfer to Android phone (USB or email)
+            3. Open file manager on phone
+            4. Tap the APK file
+            5. Allow installation from unknown sources if prompted
+            6. Tap Install
+            7. Done!
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
